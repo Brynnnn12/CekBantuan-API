@@ -7,6 +7,7 @@ import {
   deleteAidProgram,
 } from '../repositories/aidProgram.repository';
 import { CreateAidProgramRequest, UpdateAidProgramRequest } from '../requests/aidProgram.requests';
+import { AidProgramWithDetails } from '../types';
 
 export async function getAllAidPrograms(page?: number, limit?: number) {
   return findAllAidProgramsPaginated({ page, limit });
@@ -16,7 +17,7 @@ export async function getActiveAidPrograms(page?: number, limit?: number) {
   return findActiveAidProgramsPaginated({ page, limit });
 }
 
-export async function getAidProgramById(id: string) {
+export async function getAidProgramById(id: string): Promise<AidProgramWithDetails | null> {
   const program = await findAidProgramById(id);
   if (!program) {
     throw new Error('Program bantuan tidak ditemukan');
@@ -24,14 +25,20 @@ export async function getAidProgramById(id: string) {
   return program;
 }
 
-export async function createNewAidProgram(data: CreateAidProgramRequest, adminId: string) {
+export async function createNewAidProgram(
+  data: CreateAidProgramRequest,
+  adminId: string,
+): Promise<AidProgramWithDetails> {
   return createAidProgram({
     ...data,
     adminId,
   });
 }
 
-export async function updateExistingAidProgram(id: string, data: UpdateAidProgramRequest) {
+export async function updateExistingAidProgram(
+  id: string,
+  data: UpdateAidProgramRequest,
+): Promise<AidProgramWithDetails> {
   const program = await findAidProgramById(id);
   if (!program) {
     throw new Error('Program bantuan tidak ditemukan');

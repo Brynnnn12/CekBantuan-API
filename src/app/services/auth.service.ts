@@ -7,8 +7,11 @@ import {
   createUser,
 } from '../repositories/user.repository';
 import { RegisterRequest, LoginRequest } from '../requests/auth.requests';
+import { User } from '../types';
 
-export async function registerUser(data: RegisterRequest) {
+export async function registerUser(
+  data: RegisterRequest,
+): Promise<{ user: Pick<User, 'id' | 'username' | 'email'>; token: string }> {
   // Check if user already exists
   const existingEmail = await findUserByEmail(data.email);
   if (existingEmail) {
@@ -36,7 +39,9 @@ export async function registerUser(data: RegisterRequest) {
   return { user: { id: user.id, username: user.username, email: user.email }, token };
 }
 
-export async function loginUser(data: LoginRequest) {
+export async function loginUser(
+  data: LoginRequest,
+): Promise<{ user: Pick<User, 'id' | 'username' | 'email'>; token: string }> {
   // Find user by email
   const user = await findUserByEmail(data.email);
   if (!user) {
@@ -55,7 +60,9 @@ export async function loginUser(data: LoginRequest) {
   return { user: { id: user.id, username: user.username, email: user.email }, token };
 }
 
-export async function getCurrentUser(userId: string) {
+export async function getCurrentUser(
+  userId: string,
+): Promise<Pick<User, 'id' | 'username' | 'email'>> {
   const currentUser = await findUserById(userId);
   if (!currentUser) {
     throw new Error('User tidak ditemukan');

@@ -10,6 +10,7 @@ import {
 } from '../services/aidProgram.service';
 import { createAidProgramSchema, updateAidProgramSchema } from '../requests/aidProgram.requests';
 import { ApiResponse } from '../../utils/apiResponse';
+import { AuthRequest } from '../types';
 
 export const getAidPrograms = asyncHandler(async (req: Request, res: Response) => {
   const page = req.query.page ? parseInt(req.query.page as string) : undefined;
@@ -53,7 +54,7 @@ export const getAidProgram = asyncHandler(async (req: Request, res: Response) =>
   ApiResponse.success(res, program);
 });
 
-export const createAidProgram = asyncHandler(async (req: Request, res: Response) => {
+export const createAidProgram = asyncHandler(async (req: AuthRequest, res: Response) => {
   const validatedData = createAidProgramSchema.parse(req.body);
   const adminId = req.user?.id;
 

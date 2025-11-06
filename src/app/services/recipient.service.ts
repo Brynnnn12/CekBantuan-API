@@ -7,12 +7,13 @@ import {
   deleteRecipient,
 } from '../repositories/recipient.repository';
 import { CreateRecipientRequest, UpdateRecipientRequest } from '../requests/recipient.requests';
+import { RecipientWithPrograms } from '../types';
 
 export async function getAllRecipients(page?: number, limit?: number) {
   return findAllRecipientsPaginated({ page, limit });
 }
 
-export async function getRecipientById(id: string) {
+export async function getRecipientById(id: string): Promise<RecipientWithPrograms> {
   const recipient = await findRecipientById(id);
   if (!recipient) {
     throw new Error('Recipient tidak ditemukan');
@@ -20,7 +21,7 @@ export async function getRecipientById(id: string) {
   return recipient;
 }
 
-export async function getRecipientByNik(nik: string) {
+export async function getRecipientByNik(nik: string): Promise<RecipientWithPrograms> {
   const recipient = await findRecipientByNik(nik);
   if (!recipient) {
     throw new Error('Recipient dengan NIK tersebut tidak ditemukan');
@@ -28,7 +29,9 @@ export async function getRecipientByNik(nik: string) {
   return recipient;
 }
 
-export async function createNewRecipient(data: CreateRecipientRequest) {
+export async function createNewRecipient(
+  data: CreateRecipientRequest,
+): Promise<RecipientWithPrograms> {
   // Check if NIK already exists
   const existing = await findRecipientByNik(data.nik);
   if (existing) {
@@ -38,7 +41,10 @@ export async function createNewRecipient(data: CreateRecipientRequest) {
   return createRecipient(data);
 }
 
-export async function updateExistingRecipient(id: string, data: UpdateRecipientRequest) {
+export async function updateExistingRecipient(
+  id: string,
+  data: UpdateRecipientRequest,
+): Promise<RecipientWithPrograms> {
   const recipient = await findRecipientById(id);
   if (!recipient) {
     throw new Error('Recipient tidak ditemukan');

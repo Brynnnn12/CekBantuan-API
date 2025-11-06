@@ -1,5 +1,13 @@
 import { Response } from 'express';
 
+interface ApiResponseData {
+  success: boolean;
+  message: string;
+  data?: unknown;
+  pagination?: unknown;
+  errors?: unknown;
+}
+
 export class ApiResponse {
   static success(
     res: Response,
@@ -8,7 +16,7 @@ export class ApiResponse {
     statusCode = 200,
     pagination?: unknown,
   ) {
-    const response: any = {
+    const response: ApiResponseData = {
       success: true,
       message,
       data,
@@ -20,10 +28,11 @@ export class ApiResponse {
   }
 
   static error(res: Response, message = 'Error', statusCode = 500, errors: unknown = null) {
-    return res.status(statusCode).json({
+    const response: ApiResponseData = {
       success: false,
       message,
       errors,
-    });
+    };
+    return res.status(statusCode).json(response);
   }
 }

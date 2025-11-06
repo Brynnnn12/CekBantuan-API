@@ -20,7 +20,19 @@ export async function findAllRecipientsPaginated(options: PaginationOptions = {}
   const { skip, limit } = PaginationUtil.getPaginationOptions(options);
   const [data, total] = await Promise.all([
     prisma.recipient.findMany({
-      include: { programs: true },
+      select: {
+        nik: true,
+        name: true,
+        address: true,
+        notes: true,
+        programs: {
+          select: {
+            program: {
+              select: { name: true },
+            },
+          },
+        },
+      },
       skip,
       take: limit,
     }),

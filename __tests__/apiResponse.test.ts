@@ -1,6 +1,7 @@
 import { ApiResponse } from '../src/utils/apiResponse';
 
 describe('ApiResponse', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockRes: any;
 
   beforeEach(() => {

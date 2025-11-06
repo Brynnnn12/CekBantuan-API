@@ -49,7 +49,86 @@ interface AuthRequest extends Request {
   user?: User;
 }
 
-export { User, Announcement, Recipient, AidProgram, ProgramRecipient, AuthRequest };
+interface AidProgramWithDetails {
+  id: string;
+  name: string;
+  description: string;
+  status: 'DRAFT' | 'ACTIVE';
+  adminId: string;
+  admin: { id: string; username: string; email: string };
+  recipients: Array<{
+    recipient: { id: string; nik: string; name: string; address: string; notes: string | null };
+  }>;
+}
+
+interface RecipientWithPrograms {
+  id: string;
+  nik: string;
+  name: string;
+  address: string;
+  notes: string | null;
+  programs: Array<{
+    programId: string;
+    recipientId: string;
+  }>;
+}
+
+interface ProgramRecipientWithDetails {
+  programId: string;
+  recipientId: string;
+  program: {
+    id: string;
+    name: string;
+    description: string;
+    status: 'DRAFT' | 'ACTIVE';
+    adminId: string;
+  };
+  recipient: {
+    id: string;
+    nik: string;
+    name: string;
+    address: string;
+    notes: string | null;
+  };
+}
+
+interface RecipientByProgram {
+  programId: string;
+  recipientId: string;
+  recipient: {
+    id: string;
+    nik: string;
+    name: string;
+    address: string;
+    notes: string | null;
+  };
+}
+
+interface ProgramByRecipient {
+  programId: string;
+  recipientId: string;
+  program: {
+    id: string;
+    name: string;
+    description: string;
+    status: 'DRAFT' | 'ACTIVE';
+    adminId: string;
+  };
+}
+
+export {
+  User,
+  Announcement,
+  Recipient,
+  AidProgram,
+  ProgramRecipient,
+  AuthRequest,
+  AidProgramWithDetails,
+  RecipientWithPrograms,
+  ProgramRecipientWithDetails,
+  RecipientByProgram,
+  ProgramByRecipient,
+};
 
 declare module 'express' {
   interface Request {

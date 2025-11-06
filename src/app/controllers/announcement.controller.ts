@@ -13,6 +13,7 @@ import {
   updateAnnouncementSchema,
 } from '../requests/announcement.requests';
 import { ApiResponse } from '../../utils/apiResponse';
+import { AuthRequest } from '../types';
 
 export const getAnnouncements = asyncHandler(async (req: Request, res: Response) => {
   const page = req.query.page ? parseInt(req.query.page as string) : undefined;
@@ -42,7 +43,7 @@ export const getAnnouncement = asyncHandler(async (req: Request, res: Response) 
   ApiResponse.success(res, announcement, 'Berhasil mengambil announcement', 200);
 });
 
-export const createAnnouncement = asyncHandler(async (req: Request, res: Response) => {
+export const createAnnouncement = asyncHandler(async (req: AuthRequest, res: Response) => {
   const validatedData = createAnnouncementSchema.parse(req.body);
   const authorId = req.user?.id;
 

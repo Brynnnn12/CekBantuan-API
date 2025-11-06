@@ -24,7 +24,9 @@ export async function getAnnouncementsByAuthor(authorId: string) {
   return findAnnouncementsByAuthor(authorId);
 }
 
-export async function getAnnouncementById(id: string) {
+export async function getAnnouncementById(
+  id: string,
+): Promise<{ title: string; content: string; author: { username: string } } | null> {
   const announcement = await findAnnouncementById(id);
   if (!announcement) {
     throw new Error('Announcement tidak ditemukan');

@@ -13,7 +13,7 @@ export async function findAllAidProgramsPaginated(options: PaginationOptions = {
   const { skip, limit } = PaginationUtil.getPaginationOptions(options);
   const [data, total] = await Promise.all([
     prisma.aidProgram.findMany({
-      include: { admin: true, recipients: { include: { recipient: true } } },
+      select: { admin: true, recipients: { include: { recipient: true } } },
       skip,
       take: limit,
     }),

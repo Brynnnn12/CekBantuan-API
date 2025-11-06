@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler';
 import { registerUser, loginUser, getCurrentUser } from '../services/auth.service';
 import { registerSchema, loginSchema } from '../requests/auth.requests';
 import { ApiResponse } from '../../utils/apiResponse';
+import { AuthRequest } from '../types';
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const validatedData = registerSchema.parse(req.body);
@@ -18,7 +19,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   ApiResponse.success(res, result, 'Login berhasil');
 });
 
-export const getMe = asyncHandler(async (req: Request, res: Response) => {
+export const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   if (!userId) {
     ApiResponse.error(res, 'Unauthorized', 401);
