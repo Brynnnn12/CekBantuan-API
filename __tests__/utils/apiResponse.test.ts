@@ -1,4 +1,4 @@
-import { ApiResponse } from '../src/utils/apiResponse';
+import { ApiResponse } from '../../src/utils/apiResponse';
 
 describe('ApiResponse', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,10 +29,11 @@ describe('ApiResponse', () => {
 
     it('should return success response with pagination', () => {
       const data = [{ id: 1 }];
-      const pagination = { page: 1, total: 10 };
+      const pagination = { page: 1, limit: 10, total: 100 };
 
       ApiResponse.success(mockRes, data, 'Success', 200, pagination);
 
+      expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith({
         success: true,
         message: 'Success',
@@ -41,7 +42,7 @@ describe('ApiResponse', () => {
       });
     });
 
-    it('should use default values', () => {
+    it('should return success response with default values', () => {
       ApiResponse.success(mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(200);
@@ -56,7 +57,7 @@ describe('ApiResponse', () => {
   describe('error', () => {
     it('should return error response', () => {
       const message = 'Error message';
-      const statusCode = 400;
+      const statusCode = 500;
       const errors = { field: 'required' };
 
       ApiResponse.error(mockRes, message, statusCode, errors);
@@ -69,7 +70,7 @@ describe('ApiResponse', () => {
       });
     });
 
-    it('should use default values for error', () => {
+    it('should return error response with default values', () => {
       ApiResponse.error(mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(500);
