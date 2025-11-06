@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 interface User {
   id: string;
   username: string;
@@ -49,10 +51,8 @@ interface AuthRequest extends Request {
 
 export { User, Announcement, Recipient, AidProgram, ProgramRecipient, AuthRequest };
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: Pick<User, 'id' | 'email' | 'username'>;
-    }
+declare module 'express' {
+  interface Request {
+    user?: Pick<User, 'id' | 'email' | 'username'>;
   }
 }

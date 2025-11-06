@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { registerUser, loginUser, getCurrentUser } from '../services/auth.service';
 import { registerSchema, loginSchema } from '../requests/auth.requests';

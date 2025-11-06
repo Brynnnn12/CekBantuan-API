@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
 import prisma from '../src/config/database';
 
 // Load test environment

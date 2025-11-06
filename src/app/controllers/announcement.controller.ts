@@ -3,7 +3,6 @@ import asyncHandler from 'express-async-handler';
 import {
   getAllAnnouncements,
   getPublishedAnnouncements,
-  getAnnouncementsByAuthor,
   getAnnouncementById,
   createNewAnnouncement,
   updateExistingAnnouncement,
