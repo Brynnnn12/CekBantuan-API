@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Char(36)
+  username  String   @unique
+  password  String // Ingat untuk hash password ini
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relasi: Satu Admin bisa membuat banyak pengumuman
+  announcements Announcement[]
+  
+  // Relasi: Satu Admin bisa mengelola banyak program bantuan
+  aidPrograms   AidProgram[]
+
+  @@map("admins")
+}
+
+// Model untuk Papan Informasi Digital (Pengganti Kertas)
+model Announcement {
+  id        String     @id @default(uuid()) @db.Char(36) @map("post_id")
+  title     String
+  content   String     @db.Text
+  status    PostStatus @default(DRAFT)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt
+  
+  // Relasi: Setiap pengumuman dimiliki oleh satu Admin
+  authorId  String     @map("author_id")
+  author    User       @relation(fields: [authorId], references: [id])
+
+  @@map("announcements")
+}
+
+// Model untuk Data Induk Penerima Bantuan
+model Recipient {
+  id      String   @id @default(uuid()) @db.Char(36) @map("recipient_id")
+  nik     String   @unique
+  name    String
+  address String   @db.Text
+  notes   String?  @db.Text // opsional
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relasi: Satu penerima bisa ada di banyak program
+  programs ProgramRecipient[]
+
+  @@map("recipients")
+}
+
+// Model untuk Program Bantuan (Beras, Tunai, dll)
+model AidProgram {
+  id          String        @id @default(uuid()) @db.Char(36) @map("program_id")
+  name        String
+  description String        @db.Text
+  status      ProgramStatus @default(DRAFT) // Hanya 'ACTIVE' yang tampil di cek NIK
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relasi: Setiap program dikelola oleh satu Admin
+  adminId     String        @map("admin_id")
+  admin       User          @relation(fields: [adminId], references: [id])
+  
+  // Relasi: Satu program punya banyak penerima
+  recipients  ProgramRecipient[]
+
+  @@map("aid_programs")
+}
+
+// Model Pivot (Tabel Penghubung)
+// Menghubungkan siapa (Recipient) mendapat apa (AidProgram)
+model ProgramRecipient {
+  // Relasi ke Program
+  programId   String      @map("program_id")
+  program     AidProgram  @relation(fields: [programId], references: [id])
+  
+  // Relasi ke Penerima
+  recipientId String      @map("recipient_id")
+  recipient   Recipient   @relation(fields: [recipientId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Kunci utama gabungan untuk mencegah duplikat
+  @@id([programId, recipientId])
+  @@map("program_recipients")
+}
+
+
+// Enums untuk status
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum ProgramStatus {
+  DRAFT
+  ACTIVE
+}
